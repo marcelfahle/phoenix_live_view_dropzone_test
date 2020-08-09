@@ -47,7 +47,10 @@ defmodule LiveViewDropzoneTest.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:phoenix_live_view_dropzone, "~> 0.0.7"}
+      {:phoenix_live_view_dropzone, "~> 0.0.7"},
+      {:ex_aws, "~> 2.1"},
+      {:ex_aws_s3, "~> 2.0"},
+      {:hackney, "~> 1.9"}
     ]
   end
 
