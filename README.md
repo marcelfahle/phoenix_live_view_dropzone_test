@@ -4,8 +4,8 @@ This is just a quick test or proof of concept for uploading large (video) files 
 
 Here's how it works:
 
-To initialte uploads, it uses the phoenix_live_view_dropzone component by Jon Rowe.
-Once you add a file from your computer, the dropzone comoponent fires off the ``` generate-url` event to the ``LiveView process. In the Uploads Module is a little function that, via ExAws.S3, creates a signed upload URL with the `file_name` from the Dropzone.
+To initialte uploads, it uses the [phoenix_live_view_dropzone](https://github.com/JonRowe/phoenix_live_view_dropzone) component by [Jon Rowe](https://github.com/JonRowe).
+Once you add a file from your computer, the dropzone comoponent fires off the `generate-url` event to the LiveView process. In the Uploads Module is a little function that, via ExAws.S3, creates a signed upload URL with the `file_name` from the Dropzone.
 This URL we hand back to the Dropzone component, which then starts the upload and returns progress information until it's done.
 
 When the upload is done, we get a signed GET url from the Uploads Module, so that we can actually look at the uploaded file.
