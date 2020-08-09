@@ -20,7 +20,13 @@ To start the app
 - Install dependencies with `mix deps.get`
 - Install Node.js dependencies with `npm install` inside the `assets` directory
 - Add your S3 secrets to `config/dev.secret.exs` (gets importet into `config/dev.exs`)
-  ``config :ex_aws, access_key_id: "ACCESS_KEY_ID", secret_access_key: "SECRET_ACCESS_KEY", region: "AWS_REGION", bucket: "BUCKET"
+    ```
+    config :ex_aws, 
+      access_key_id: "ACCESS_KEY_ID", 
+      secret_access_key: "SECRET_ACCESS_KEY", 
+      region: "AWS_REGION", 
+      bucket: "BUCKET"
+    ```
 - Start Phoenix with `mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
