@@ -1,39 +1,35 @@
 defmodule LiveViewDropzoneTestWeb.PageLive do
   use LiveViewDropzoneTestWeb, :live_view
 
-  @impl true
+  alias LiveViewDropzoneTest.Uploads
+
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, query: "", results: %{})}
+    {:ok, assign(socket, query: "", results: %{}, file_data: %{})}
   end
 
-  @impl true
-  def handle_event("suggest", %{"q" => query}, socket) do
-    {:noreply, assign(socket, results: search(query), query: query)}
+  def handle_event("phx-dropzone", ["generate-url", %{"id" => id, "name" => file_name}], socket) do
+    {:ok, signed_url} = Uploads.get_signed_url(file_name)
+    {:noreply, assign(socket, file_data: %{id: id, url: signed_url})}
   end
 
-  @impl true
-  def handle_event("search", %{"q" => query}, socket) do
-    case search(query) do
-      %{^query => vsn} ->
-        {:noreply, redirect(socket, external: "https://hexdocs.pm/#{query}/#{vsn}")}
-
-      _ ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "No dependencies found matching \"#{query}\"")
-         |> assign(results: %{}, query: query)}
-    end
+  def handle_event(
+        "phx-dropzone",
+        ["file-status", %{"status" => "InProgress", "progress" => progress}],
+        socket
+      ) do
+    {:noreply, assign(socket, status: :uploading, progress: progress)}
   end
 
-  defp search(query) do
-    if not LiveViewDropzoneTestWeb.Endpoint.config(:code_reloader) do
-      raise "action disabled when not in development"
-    end
+  def handle_event(
+        "phx-dropzone",
+        ["file-status", %{"status" => "Done", "name" => file_name}],
+        socket
+      ) do
+    {:ok, video_url} = Uploads.get_download_url(file_name)
+    {:noreply, assign(socket, status: :success, video_url: video_url)}
+  end
 
-    for {app, desc, vsn} <- Application.started_applications(),
-        app = to_string(app),
-        String.starts_with?(app, query) and not List.starts_with?(desc, ~c"ERTS"),
-        into: %{},
-        do: {app, vsn}
+  def handle_event("phx-dropzone", ["file-status", _payload], socket) do
+    {:noreply, assign(socket, status: :error)}
   end
 end
